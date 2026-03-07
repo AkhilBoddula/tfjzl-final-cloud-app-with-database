@@ -52,16 +52,23 @@
             </div>
             <!-- Course detail template changes go here -->
             {% if user.is_authenticated %}
-                Start Exam
-
-                {% for question in course.question_set.all %}
-                    {{ question.content }}
+            <form method="post" action="{% url 'onlinecourse:submit' course.id %}">
                     {% csrf_token %}
-                    {% for choice in question.choice_set.all %}
-                        {{ choice.content }}
+                    <button type="submit">Start Exam</button>
+
+                    {% for question in course.question_set.all %}
+                    <div class="question-block">
+                        <p><strong>{{ question.content }}</strong></p>
+                        {% for choice in question.choice_set.all %}
+                        <label>
+                            <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}" required>
+                            {{ choice.content }}
+                        </label><br>
+                        {% endfor %}
+                    </div>
                     {% endfor %}
-                {% endfor %} 
-            {% endif %}
+                </form>
+        {% endif %}
     </div>
 </body>
 </html>
